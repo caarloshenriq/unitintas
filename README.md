@@ -4,11 +4,9 @@
 
 ### Passo a passo
 Clone Repositório
+
 ```sh
-git clone -b laravel-12-with-php8.4 https://github.com/especializati/setup-docker-laravel.git app-laravel
-```
-```sh
-cd app-laravel
+cd unitintas
 ```
 
 Suba os containers do projeto
@@ -38,14 +36,14 @@ Gere a key do projeto Laravel
 php artisan key:generate
 ```
 
-OPCIONAL: Gere o banco SQLite (caso não use o banco MySQL)
-```sh
-touch database/database.sqlite
-```
-
 Rodar as migrations
 ```sh
 php artisan migrate
+```
+
+Instale as dependencias do js
+```sh
+npm i
 ```
 
 Acesse o projeto
