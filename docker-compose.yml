@@ -1,53 +1,56 @@
 services:
-    # image project
-    app:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        restart: unless-stopped
-        working_dir: /var/www/
-        volumes:
-            - ./:/var/www
-        depends_on:
-            - redis
-        networks:
-            - laravel
+  # PHP app
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - redis
+      - db
+    networks:
+      - laravel
 
-    # nginx
-    nginx:
-        image: nginx:alpine
-        restart: unless-stopped
-        ports:
-            - "${NGINX_PORT}:80"
-        volumes:
-            - ./:/var/www
-            - ./docker/nginx/:/etc/nginx/conf.d/
-        networks:
-            - laravel
+  # Nginx
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/:/etc/nginx/conf.d/
+    networks:
+      - laravel
+    depends_on:
+      - app
 
-    # db mysql
-    db:
-        image: mysql:8.0
-        platform: linux/x86_64
-        restart: unless-stopped
-        environment:
-            MYSQL_DATABASE: ${DB_DATABASE:-laravel}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
-            MYSQL_PASSWORD: ${DB_PASSWORD:-userpass}
-            MYSQL_USER: ${DB_USERNAME:-username}
-        volumes:
-            - ./.docker/mysql/dbdata:/var/lib/mysql
-        ports:
-            - "${DB_PORT}:3306"
-        networks:
-            - laravel
+  # MySQL
+  db:
+    image: mysql:8.0
+    platform: linux/x86_64
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-userpass}
+      MYSQL_USER: ${DB_USERNAME:-username}
+    volumes:
+      - ./.docker/mysql/dbdata:/var/lib/mysql
+    ports:
+      - "${DB_PORT_OUT}:3306"   # porta externa para o host
+    networks:
+      - laravel
 
-    # redis
-    redis:
-        image: redis:latest
-        networks:
-            - laravel
+  # Redis
+  redis:
+    image: redis:latest
+    networks:
+      - laravel
 
 networks:
-    laravel:
-        driver: bridge
+  laravel:
+    driver: bridge
