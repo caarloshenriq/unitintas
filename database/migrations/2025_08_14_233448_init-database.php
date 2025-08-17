@@ -37,7 +37,7 @@ return new class extends Migration
             $table->foreignId('saller_id')->constrained('users');
             $table->foreignId('customer_id')->constrained('customers');
             $table->decimal('total_amount', 10, 2);
-            $table->string('status')->default('pending'); // pending, completed, cancelled
+            $table->string('status')->default('P'); // Pending, Completed, (X) cancelled
             $table->timestamps();
             $table->softDeletes();
         });
