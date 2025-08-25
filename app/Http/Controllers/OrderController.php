@@ -52,7 +52,7 @@ class OrderController extends Controller
         $productIds = collect($itemsInput)->pluck('product_id')->all();
         $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
 
-        DB::transaction(function () use ($data, $itemsInput, $products, &$total) {
+        $order = DB::transaction(function () use ($data, $itemsInput, $products, &$total) {
             $order = Order::create([
                 'saller_id' => Auth::user()->id,
                 'customer_id' => $data['customer_id'],
@@ -76,9 +76,11 @@ class OrderController extends Controller
             }
 
             $order->update(['total_amount' => $total]);
+            return $order;
         });
+        return redirect()->route('orders.payment.create', $order->id)
+            ->with('success', 'Pedido criado, prossiga com o pagamento.');
 
-        return redirect()->route('orders.index')->with('success', 'Pedido criado com sucesso.');
     }
 
     public function show(Order $order)
@@ -90,7 +92,7 @@ class OrderController extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         $data = $request->validate([
-            'status' => ['required', 'in:P,C,X'],
+            'status' => ['required', 'in:P,C,X,D'],
         ]);
 
         $order->update([

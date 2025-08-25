@@ -4,21 +4,25 @@
     </x-slot>
 
     @php
-        // Mapeamento de códigos e cores
         $statusMap = [
             'P' => 'Pendente',
+            'D' => 'Em preparação',
             'C' => 'Completo',
-            'X' => 'Cancelado'
+            'X' => 'Cancelado',
         ];
-        $colorMap = [
+
+        $badgeMap = [
             'P' => 'border-yellow-400 bg-yellow-50 text-yellow-800',
+            'D' => 'border-blue-500 bg-blue-50 text-blue-800',
             'C' => 'border-green-500 bg-green-50 text-green-800',
-            'X' => 'border-red-500 bg-red-50 text-red-800'
+            'X' => 'border-red-500 bg-red-50 text-red-800',
         ];
+
         $barMap = [
             'P' => 'bg-yellow-400',
+            'D' => 'bg-blue-500',
             'C' => 'bg-green-500',
-            'X' => 'bg-red-500'
+            'X' => 'bg-red-500',
         ];
     @endphp
 
@@ -32,6 +36,7 @@
                         <option value="" {{ $current === null || $current === '' ? 'selected' : '' }}>Todos</option>
                         <option value="P" {{ $current === 'P' ? 'selected' : '' }}>Pendente</option>
                         <option value="C" {{ $current === 'C' ? 'selected' : '' }}>Completo</option>
+                        <option value="D" {{ $current === 'D' ? 'selected' : '' }}>Em Preparação</option>
                         <option value="X" {{ $current === 'X' ? 'selected' : '' }}>Cancelado</option>
                     </select>
                 </div>

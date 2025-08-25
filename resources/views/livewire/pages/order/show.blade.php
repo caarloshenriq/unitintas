@@ -8,18 +8,23 @@
     @php
         $statusMap = [
             'P' => 'Pendente',
+            'D' => 'Em preparação',
             'C' => 'Completo',
-            'X' => 'Cancelado'
+            'X' => 'Cancelado',
         ];
+
         $badgeMap = [
             'P' => 'border-yellow-400 bg-yellow-50 text-yellow-800',
+            'D' => 'border-blue-500 bg-blue-50 text-blue-800',
             'C' => 'border-green-500 bg-green-50 text-green-800',
-            'X' => 'border-red-500 bg-red-50 text-red-800'
+            'X' => 'border-red-500 bg-red-50 text-red-800',
         ];
+
         $barMap = [
             'P' => 'bg-yellow-400',
+            'D' => 'bg-blue-500',
             'C' => 'bg-green-500',
-            'X' => 'bg-red-500'
+            'X' => 'bg-red-500',
         ];
 
         $code = $order->status;
@@ -128,8 +133,8 @@
                 <form action="{{ route('orders.updateStatus', $order) }}" method="POST">
                     @csrf
                     @method('PATCH')
-                    <input type="hidden" name="status" value="C">
-                    <x-primary-button>Marcar como Completo</x-primary-button>
+                    <input type="hidden" name="status" value="D">
+                    <x-primary-button>Iniciar Preparação</x-primary-button>
                 </form>
 
                 <form action="{{ route('orders.updateStatus', $order) }}" method="POST">
@@ -139,6 +144,13 @@
                     <x-danger-button>Cancelar Pedido</x-danger-button>
                 </form>
             </div>
+        @elseif($order->status == 'D')
+            <form action="{{ route('orders.updateStatus', $order) }}" method="POST">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="status" value="C">
+                <x-primary-button>Marcar como Completo</x-primary-button>
+            </form>
         @endif
 
 
