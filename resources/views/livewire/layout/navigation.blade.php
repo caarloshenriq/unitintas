@@ -33,16 +33,16 @@ new class extends Component {
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')" wire:navigate>
-                        {{ __('Pedidos') }}
-                    </x-nav-link>
-
                     <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')" wire:navigate>
                         {{ __('Produtos') }}
                     </x-nav-link>
 
                     <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')" wire:navigate>
                         {{ __('Clientes') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" wire:navigate>
+                        {{ __('Relatorios') }}
                     </x-nav-link>
 
                     <!-- Dropdown Financeiro -->
@@ -136,16 +136,16 @@ new class extends Component {
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')" wire:navigate>
-                {{ __('Pedidos') }}
-            </x-responsive-nav-link>
-
             <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')" wire:navigate>
                 {{ __('Produtos') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')" wire:navigate>
                 {{ __('Clientes') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" wire:navigate>
+                {{ __('Relatorios') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('finance.index', ['type' => 'receivable'])" :active="request()->fullUrlIs(route('finance.index', ['type'=>'receivable']))" wire:navigate>
