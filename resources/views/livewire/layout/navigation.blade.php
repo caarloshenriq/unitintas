@@ -33,19 +33,34 @@ new class extends Component {
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')" wire:navigate>
+                    @permissionid(2)
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')"
+                        wire:navigate>
                         {{ __('Produtos') }}
                     </x-nav-link>
+                    @endpermissionid
 
-                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')" wire:navigate>
+                    @permissionid(1)
+                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')"
+                        wire:navigate>
                         {{ __('Clientes') }}
                     </x-nav-link>
+                    @endpermissionid
 
+                    @permissionid(4)
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" wire:navigate>
                         {{ __('Relatorios') }}
                     </x-nav-link>
+                    @endpermissionid
+
+                    @permissionid(3)
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('reports.*')" wire:navigate>
+                        {{ __('Usuarios') }}
+                    </x-nav-link>
+                    @endpermissionid
 
                     <!-- Dropdown Financeiro -->
+                    @permissionid(5)
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
@@ -54,10 +69,10 @@ new class extends Component {
                                     <div>Financeiro</div>
                                     <div class="ms-1">
                                         <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                             viewBox="0 0 20 20">
+                                            viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
-                                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                  clip-rule="evenodd" />
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
                                         </svg>
                                     </div>
                                 </button>
@@ -74,6 +89,7 @@ new class extends Component {
                             </x-slot>
                         </x-dropdown>
                     </div>
+                    @endpermissionid
                 </div>
             </div>
 
@@ -84,14 +100,14 @@ new class extends Component {
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
-                                 x-on:profile-updated.window="name = $event.detail.name"></div>
+                                x-on:profile-updated.window="name = $event.detail.name"></div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 20 20">
+                                    viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
-                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                          clip-rule="evenodd" />
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
                                 </svg>
                             </div>
                         </button>
@@ -118,11 +134,10 @@ new class extends Component {
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
-                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden"
-                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12" />
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -136,33 +151,53 @@ new class extends Component {
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')" wire:navigate>
+            @permissionid(2)
+            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')"
+                wire:navigate>
                 {{ __('Produtos') }}
             </x-responsive-nav-link>
+            @endpermissionid
 
-            <x-responsive-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')" wire:navigate>
+            @permissionid(1)
+            <x-responsive-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')"
+                wire:navigate>
                 {{ __('Clientes') }}
             </x-responsive-nav-link>
+            @endpermissionid
 
-            <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" wire:navigate>
+            @permissionid(4)
+            <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')"
+                wire:navigate>
                 {{ __('Relatorios') }}
             </x-responsive-nav-link>
+            @endpermissionid
 
-            <x-responsive-nav-link :href="route('finance.index', ['type' => 'receivable'])" :active="request()->fullUrlIs(route('finance.index', ['type'=>'receivable']))" wire:navigate>
+            @permissionid(3)
+            <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('reports.*')"
+                wire:navigate>
+                {{ __('Usuarios') }}
+            </x-responsive-nav-link>
+            @endpermissionid
+
+            @permissionid(5)
+            <x-responsive-nav-link :href="route('finance.index', ['type' => 'receivable'])"
+                :active="request()->fullUrlIs(route('finance.index', ['type' => 'receivable']))" wire:navigate>
                 {{ __('Contas a Receber') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('finance.index', ['type' => 'payable'])" :active="request()->fullUrlIs(route('finance.index', ['type'=>'payable']))" wire:navigate>
+            <x-responsive-nav-link :href="route('finance.index', ['type' => 'payable'])"
+                :active="request()->fullUrlIs(route('finance.index', ['type' => 'payable']))" wire:navigate>
                 {{ __('Contas a Pagar') }}
             </x-responsive-nav-link>
+            @endpermissionid
         </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800"
-                     x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
-                     x-on:profile-updated.window="name = $event.detail.name"></div>
+                    x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
+                    x-on:profile-updated.window="name = $event.detail.name"></div>
                 <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
             </div>
 

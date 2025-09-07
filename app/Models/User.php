@@ -49,13 +49,20 @@ class User extends Authenticatable
     }
 
     public function permissions()
-{
-    // ajuste nomes de tabela/chaves se forem diferentes
-    return $this->belongsToMany(
-        \App\Models\Permission::class,
-        'permission_user',
-        'user_id',
-        'permission_id'
-    )->withTimestamps();
-}
+    {
+        return $this->belongsToMany(
+            \App\Models\Permission::class,
+            'permission_user',
+            'user_id',
+            'permission_id'
+        )->withTimestamps();
+    }
+
+    public function hasPermissionId(int $id): bool
+    {
+        if ($this->relationLoaded('permissions')) {
+            return $this->permissions->contains('id', $id);
+        }
+        return $this->permissions()->where('permissions.id', $id)->exists();
+    }
 }

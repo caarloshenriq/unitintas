@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\TransactionController;
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'permission:5'])->group(function () {
     Route::get('/finance/{type}', [TransactionController::class, 'index'])
         ->whereIn('type', ['receivable', 'payable'])
         ->name('finance.index');

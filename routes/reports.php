@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ReportsController;
 
-Route::middleware(['auth','verified'])->group(function () {
+Route::middleware(['auth','verified', 'permission:4'])->group(function () {
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
 
     // (opcional) exports em CSV
