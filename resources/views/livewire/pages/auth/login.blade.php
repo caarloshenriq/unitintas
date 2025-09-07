@@ -20,6 +20,10 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
+        if (auth()->user()?->reset_password) {
+            session()->flash('force_password_reset', true);
+        }
+
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
 }; ?>

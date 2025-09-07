@@ -3,6 +3,58 @@
         <h2 class="text-xl font-semibold text-gray-800 leading-tight">Pedidos</h2>
     </x-slot>
 
+    {{-- Abre o modal automaticamente se a sessão pedir --}}
+    <div x-data x-init="$nextTick(() => { 
+    @if(session('force_password_reset')) 
+        $dispatch('open-modal', 'force-reset-password') 
+    @endif 
+})"></div>
+
+    <x-modal name="force-reset-password" :show="false" focusable maxWidth="md">
+        <form method="POST" action="{{ route('users.force-reset-password') }}" class="p-6 space-y-4">
+            @csrf
+            @method('PUT')
+
+            <h2 class="text-lg font-semibold">Trocar senha</h2>
+            <p class="text-sm text-gray-600">
+                Por segurança, informe sua senha atual e defina uma nova senha.
+            </p>
+
+            {{-- Senha atual --}}
+            <div>
+                <x-input-label for="current_password" :value="__('Senha atual')" />
+                <x-text-input id="current_password" name="current_password" type="password" class="mt-1 block w-full"
+                    required autocomplete="current-password" />
+                <x-input-error :messages="$errors->get('current_password')" class="mt-2" />
+            </div>
+
+            {{-- Nova senha --}}
+            <div>
+                <x-input-label for="password" :value="__('Nova senha')" />
+                <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" required
+                    autocomplete="new-password" />
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            </div>
+
+            {{-- Confirmar nova senha --}}
+            <div>
+                <x-input-label for="password_confirmation" :value="__('Confirmar nova senha')" />
+                <x-text-input id="password_confirmation" name="password_confirmation" type="password"
+                    class="mt-1 block w-full" required autocomplete="new-password" />
+            </div>
+
+            <div class="mt-6 flex justify-end gap-2">
+                <x-secondary-button x-on:click="$dispatch('close')">
+                    Cancelar
+                </x-secondary-button>
+                <x-primary-button>
+                    Salvar nova senha
+                </x-primary-button>
+            </div>
+        </form>
+    </x-modal>
+
+
     @php
         $statusMap = [
             'P' => 'Pendente',

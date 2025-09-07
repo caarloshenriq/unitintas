@@ -1,12 +1,11 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Route::middleware('guest')->group(function () {
-    Volt::route('register', 'pages.auth.register')
-        ->name('register');
 
     Volt::route('login', 'pages.auth.login')
         ->name('login');
@@ -19,6 +18,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Volt::route('register', 'pages.user.register')
+        ->name('register');
     Volt::route('verify-email', 'pages.auth.verify-email')
         ->name('verification.notice');
 
@@ -28,4 +29,18 @@ Route::middleware('auth')->group(function () {
 
     Volt::route('confirm-password', 'pages.auth.confirm-password')
         ->name('password.confirm');
+
+    Route::get('/usuarios', [UserController::class, 'index'])->name('users.index');
+
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])
+        ->name('users.edit');
+
+    Route::put('/users/{id}', [UserController::class, 'update'])
+        ->name('users.update');
+
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])
+        ->name('users.destroy');
+
+    Route::put('/users/password/force-reset', [UserController::class, 'forceResetPassword'])
+        ->name('users.force-reset-password');
 });
