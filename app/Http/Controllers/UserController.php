@@ -72,15 +72,16 @@ class UserController extends Controller
             $user->permissions()->detach();
         }
 
-        // Atualiza dados básicos (sem password e sem selectedPermissions)
         $user->fill(collect($validated)->except(['password', 'selectedPermissions'])->toArray());
 
-        // Se veio nova senha, troca e marca reset_password = true
         if ($request->filled('password')) {
             $this->resetPass($user, $request->input('password'));
         }
 
         $user->save();
+
+        $logController = new LogController();
+        $logController->registerLog('Update', 'User - id: ' . $id);
 
         return redirect()
             ->route('users.index')
@@ -96,6 +97,8 @@ class UserController extends Controller
             'password' => Hash::make($newPassword),
             'reset_password' => true,
         ]);
+        $logController = new LogController();
+        $logController->registerLog('Reset password', 'User - id: ' . $user->id);
     }
 
     public function forceResetPassword(Request $request)
@@ -112,6 +115,7 @@ class UserController extends Controller
             'reset_password' => false,
         ])->save();
 
+
         return back()->with('success', 'Senha alterada com sucesso.');
     }
 
@@ -123,11 +127,8 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        Log::create([
-            'action' => 'delete_user',
-            'details' => 'Usuario ' . $user->name . ' foi deletado.',
-            'performed_by' => auth()->user()->id,
-        ]);
+        $logController = new LogController();
+        $logController->registerLog('Delete', 'User - id: ' . $id);
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }

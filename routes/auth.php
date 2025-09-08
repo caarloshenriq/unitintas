@@ -44,3 +44,6 @@ Route::middleware(['auth', 'permission:3'])->group(function () {
     Route::put('/users/password/force-reset', [UserController::class, 'forceResetPassword'])
         ->name('users.force-reset-password');
 });
+
+Route::put('/users/password/force-reset', [UserController::class, 'forceResetPassword'])
+        ->name('users.force-reset-password')->middleware('auth');

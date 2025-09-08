@@ -30,6 +30,8 @@ class ProductController extends Controller
 
         Product::create($request->all());
 
+        $logController = new LogController();
+        $logController->registerLog('Create', 'Product - name: ' . $request->name);
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
@@ -47,6 +49,9 @@ class ProductController extends Controller
 
         $product->update($request->all());
 
+        $logController = new LogController();
+        $logController->registerLog('Update', 'Product - id: ' . $product->id);
+
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
@@ -57,6 +62,9 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $product->delete();
+
+        $logController = new LogController();
+        $logController->registerLog('Delete', 'Product - id: ' . $product->id);
 
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }

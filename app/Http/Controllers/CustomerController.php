@@ -28,16 +28,12 @@ class CustomerController extends Controller
 
         Customer::create($request->all());
 
+        $logController = new LogController();
+        $logController->registerLog('Customer', 'Create');
+
         return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Customer $customer)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -50,7 +46,10 @@ class CustomerController extends Controller
             'email' => 'required|email|max:255|unique:customers,email,' . $customer->id,
             'phone' => 'nullable|string|max:20',
         ]);
-        $customer->update($request->all()); 
+        $customer->update($request->all());
+
+        $logController = new LogController();
+        $logController->registerLog('Customer', 'Update - id: ' . $customer->id);
 
         return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
@@ -61,6 +60,9 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         $customer->delete();
+
+        $logController = new LogController();
+        $logController->registerLog('Customer', 'Delete - id: ' . $customer->id);
         return redirect()->route('customers.index')->with('success', 'Customer deleted successfully.');
     }
 }

@@ -78,6 +78,10 @@ class OrderController extends Controller
             $order->update(['total_amount' => $total]);
             return $order;
         });
+
+        $logController = new LogController();
+        $logController->registerLog('Create', 'Order');
+
         return redirect()->route('orders.payment.create', $order->id)
             ->with('success', 'Pedido criado, prossiga com o pagamento.');
 
@@ -98,6 +102,9 @@ class OrderController extends Controller
         $order->update([
             'status' => $data['status'],
         ]);
+
+        $logController = new LogController();
+        $logController->registerLog('Update Status', 'Order' . $order->id);
 
         return redirect()->route('orders.show', $order)->with('success', 'Status atualizado com sucesso!');
     }

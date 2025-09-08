@@ -26,6 +26,7 @@ class PaymentController extends Controller
             'first_due_date'  => ['nullable','date'],
         ]);
 
+        $status = 'paid';
         $discount       = (float)($request->input('discount', 0));
         $method         = $request->input('payment_method');
         $installments   = (int)($request->input('installments', 1));
@@ -33,21 +34,18 @@ class PaymentController extends Controller
                                 ? Carbon::parse($request->input('first_due_date'))
                                 : now();
 
-        // Se não for crédito, força 1 parcela
         if ($method !== 'credito') {
             $installments = 1;
+            $status = 'pending';
         }
 
-        // Total líquido (não deixa negativo)
         $total = max(0, (float)$order->total_amount - $discount);
 
-        // Calcula parcelas iguais, ajustando centavos na última
         $per = $installments ? floor(($total / $installments) * 100) / 100 : $total;
         $soma = $per * $installments;
-        $ajuste = round(($total - $soma), 2); // centavos que sobraram
+        $ajuste = round(($total - $soma), 2);
 
-        DB::transaction(function () use ($order, $method, $installments, $firstDue, $per, $ajuste, $total, $discount) {
-            // Gera payments + transactions (recebíveis)
+        DB::transaction(function () use ($order, $method, $installments, $firstDue, $per, $ajuste, $total, $discount, $status) {
             for ($i=1; $i <= $installments; $i++) {
                 $valor = $per;
                 if ($i === $installments) {
@@ -59,7 +57,7 @@ class PaymentController extends Controller
                     'order_id'       => $order->id,
                     'amount'         => $valor,
                     'payment_method' => $method,
-                    'status'         => 'pending',
+                    'status'         => $status,
                 ]);
 
                 Transaction::create([
@@ -67,11 +65,14 @@ class PaymentController extends Controller
                     'description' => "Pedido #{$order->id} - Parcela {$i}/{$installments}" . ($discount>0 && $i===1 ? " (c/ desconto)" : ""),
                     'amount'      => $valor,
                     'due_date'    => $due->toDateString(),
-                    'status'      => 'pending',
+                    'status'      => $status,
                     'order_id'    => $order->id,
                 ]);
             }
         });
+
+        $logController = new LogController();
+        $logController->registerLog('Payment', 'Payment - id: ' . $order->id);
 
         return redirect()->route('orders.show', $order->id)
             ->with('success', "Pagamento gerado em {$installments} parcela(s). Total R$ " . number_format($total,2,',','.'));
